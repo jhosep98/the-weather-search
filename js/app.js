@@ -57,9 +57,39 @@ function consultApi(city, country) {
   fetch(url)
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
+      cleanHTML(); // clean html
       if (data.cod === "404") {
         showError("City not found");
+        return;
       }
+      // print the answer in the HTML
+      showWeather(data);
     });
 }
+
+function showWeather(data) {
+  const {
+    main: { temp, temp_max, temp_min },
+  } = data;
+
+  const celsius = kelvinToCelsius(temp);
+
+  const current = document.createElement("p");
+  current.innerHTML = `${celsius} &#8451`;
+  current.classList.add("font-bold", "text-6xl");
+
+  const resultDiv = document.createElement("div");
+  resultDiv.classList.add("text-center", "text-white");
+  resultDiv.appendChild(current);
+
+  result.appendChild(resultDiv);
+}
+
+function cleanHTML() {
+  while (result.firstChild) {
+    result.removeChild(result.firstChild);
+  }
+}
+
+// helpers
+const kelvinToCelsius = (grades) => (grades - 273.15).toFixed(1);
