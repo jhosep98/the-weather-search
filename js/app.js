@@ -54,33 +54,56 @@ function consultApi(city, country) {
   const appId = "d951f33616f0224c149c2fee35776c59";
   const url = `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${appId}`;
 
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => {
-      cleanHTML(); // clean html
-      if (data.cod === "404") {
-        showError("City not found");
-        return;
-      }
-      // print the answer in the HTML
-      showWeather(data);
-    });
+  Spinner();
+
+  setTimeout(() => {
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        cleanHTML(); // clean html
+        if (data.cod === "404") {
+          showError("City not found");
+          return;
+        }
+        // print the answer in the HTML
+        showWeather(data);
+      });
+  }, 1000);
 }
 
 function showWeather(data) {
   const {
+    name,
     main: { temp, temp_max, temp_min },
   } = data;
 
   const celsius = kelvinToCelsius(temp);
+  const tempMax = kelvinToCelsius(temp_max);
+  const tempMin = kelvinToCelsius(temp_min);
+
+  const cityName = document.createElement("p");
+  cityName.textContent = `wheater in ${name}`;
+  cityName.classList.add("font-bold", "text-2xl");
 
   const current = document.createElement("p");
   current.innerHTML = `${celsius} &#8451`;
   current.classList.add("font-bold", "text-6xl");
 
+  const tempMaxElement = document.createElement("p");
+  tempMaxElement.innerHTML = `Max: ${tempMax} &#8451`;
+  tempMaxElement.classList.add("text-xl");
+
+  const tempMinElement = document.createElement("p");
+  tempMinElement.innerHTML = `Min: ${tempMin} &#8451`;
+  tempMinElement.classList.add("text-xl");
+
   const resultDiv = document.createElement("div");
   resultDiv.classList.add("text-center", "text-white");
+
+  resultDiv.appendChild(cityName);
   resultDiv.appendChild(current);
+  resultDiv.appendChild(tempMaxElement);
+  resultDiv.appendChild(tempMinElement);
 
   result.appendChild(resultDiv);
 }
@@ -89,6 +112,26 @@ function cleanHTML() {
   while (result.firstChild) {
     result.removeChild(result.firstChild);
   }
+}
+
+function Spinner() {
+  cleanHTML();
+  const divSpinner = document.createElement("div");
+  divSpinner.classList.add("sk-cube-grid");
+
+  divSpinner.innerHTML = `
+  <div class="sk-cube sk-cube1"></div>
+  <div class="sk-cube sk-cube2"></div>
+  <div class="sk-cube sk-cube3"></div>
+  <div class="sk-cube sk-cube4"></div>
+  <div class="sk-cube sk-cube5"></div>
+  <div class="sk-cube sk-cube6"></div>
+  <div class="sk-cube sk-cube7"></div>
+  <div class="sk-cube sk-cube8"></div>
+  <div class="sk-cube sk-cube9"></div>
+    `;
+
+  result.appendChild(divSpinner);
 }
 
 // helpers
