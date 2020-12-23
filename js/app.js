@@ -52,7 +52,7 @@ function showError(message) {
 
 function consultApi(city, country) {
   const appId = "d951f33616f0224c149c2fee35776c59";
-  const url = `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${appId}`;
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${appId}`;
 
   Spinner();
 
